@@ -24,5 +24,5 @@ urlpatterns = [
     path('post/', include('posts.urls')),
     # path('home/', include('posts.urls')),
     # path('google/', views.google), # views.google handle redirect
-    path("<int:id>/", views.google)
+    path("<int:id>/", views.google),
 ]
