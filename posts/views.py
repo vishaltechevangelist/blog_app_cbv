@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, Http404
 from django.urls import reverse
 
 
@@ -23,7 +23,6 @@ posts = [
     }
 ]
 
-
 def helloWorld(request):
     # return HttpResponse("<html><h1>Hello World!</h1></html>")
     html = ""
@@ -39,7 +38,7 @@ def home(request):
     # return HttpResponse(html)
     name = "vishal saxena" # For testing & learning
     # return render(request, 'posts/home.html', {"posts":posts, "name":name})
-    return render(request, 'posts/index.html', {"posts":posts, "name":name})
+    return render(request, 'posts/index.html', {"posts":posts})
 
 def post(request, id):
     valid_id = False
@@ -53,7 +52,9 @@ def post(request, id):
         # return render(request, 'posts/post.html', {"post":post})
         return render(request, 'posts/post_tpl.html', {"post":post})
     else:
-        return HttpResponseNotFound("Post not available😉")
+        # return HttpResponseNotFound("Post not available😉")
+        raise Http404()
+        
     
 def google(request, id):
     # return HttpResponseRedirect("https://www.google.com")
