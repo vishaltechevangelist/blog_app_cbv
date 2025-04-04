@@ -1,31 +1,15 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Blog Home Page</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <!-- <h1>Welcome - {{name}}</h1> -->
-        {% if posts %}
-            <h1> All posts available </h1>
-            {% for post in posts %} 
-                <a href=""><h1> {{post.title}} </h1></a>
-                <p>{{post.content}}</p>
-            {% endfor %}
-        {% else %}
+{% extends "base.html" %}
+
+    {% block title %}Blog Home Page{% endblock title %}
+    {% block body %}
+        <h1>Welcome - {{name|capfirst|truncatechars:5}}</h1>       
+        {% for post in posts %} 
+            <!-- forloop.first = {{forloop.first}} <br> forloop.last = {{forloop.last}} -->
+            <a href="{% url "post" post.id %}"><h1>{{forloop.counter}} - {{post.title|capfirst}}</h1></a>
+            <p>{{post.content|truncatewords:5}}</p>
+        {% empty %}
             <h1>No posts available</h1>
-        {% endif %}        
-        <script src="" async defer></script>
-    </body>
-</html>
+        {% endfor %}        
+    {% endblock body %}
+                 
+        
