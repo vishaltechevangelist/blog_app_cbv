@@ -36,7 +36,9 @@ def home(request):
     html = ""
     for post in posts:
         html += "<html><div><a href='/post/{}'/><h1>{} - {}</h1></a><p>{}</p></div></html>".format(post["id"], post["id"],post["title"],post["content"])
-    return HttpResponse(html)
+    # return HttpResponse(html)
+    name = "Vishal Saxena" # For testing & learning
+    return render(request, 'posts/home.html', {"posts":posts, "name":name})
 
 def post(request, id):
     valid_id = False
