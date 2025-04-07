@@ -14,3 +14,6 @@ blogenv/
 # Ignore IDE specific files (e.g., VSCode, PyCharm)
 .vscode/
 .idea/
+
+# Ignore Django SQLite DB
+db.sqlite3
