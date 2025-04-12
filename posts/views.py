@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, Http404
 from django.urls import reverse
 from posts.models import Post
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -23,12 +24,12 @@ from posts.models import Post
 #     }
 # ]
 
-def helloWorld(request):
-    # return HttpResponse("<html><h1>Hello World!</h1></html>")
-    html = ""
-    for post in posts:
-        html += "<html><div><h1>{} - {}</h1><p>{}</p></div></html>".format(post["id"],post["title"],post["content"])
-    return HttpResponse(html)
+# def helloWorld(request):
+#     # return HttpResponse("<html><h1>Hello World!</h1></html>")
+#     html = ""
+#     for post in posts:
+#         html += "<html><div><h1>{} - {}</h1><p>{}</p></div></html>".format(post["id"],post["title"],post["content"])
+#     return HttpResponse(html)
 
 def home(request):
    # return HttpResponse("<html><h1>Hello World!</h1></html>")
@@ -57,17 +58,17 @@ def post(request, id):
     # else:
     #     # return HttpResponseNotFound("Post not available😉")
     #     raise Http404()
-    try:
-        post = Post.objects.get(id=id)
-    except:
-        raise Http404()
-    return render(request, 'posts/post_tpl.html', {"post":post})
-        
+    # try:
+    #     post = Post.objects.get(id=id)
+    # except:
+    #     raise Http404()
+    # return render(request, 'posts/post_tpl.html', {"post":post})
+    post = get_object_or_404(Post, id=id)
+    return render(request, 'posts/post_tpl.html', {"post":post})    
+    
     
 def google(request, id):
     # return HttpResponseRedirect("https://www.google.com")
     # return HttpResponseRedirect("/post/{}/".format(id))
     url = reverse("post", args=[id])
     return HttpResponseRedirect(url)
-
-    
