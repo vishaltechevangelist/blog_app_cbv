@@ -40,9 +40,12 @@ def home(request):
     # name = "vishal saxena" # For testing & learning
     # # return render(request, 'posts/home.html', {"posts":posts, "name":name})
     # return render(request, 'posts/index.html', {"posts":posts})
-    all_posts = Post.objects.all()
-    return render(request, 'posts/index.html', {"posts":all_posts})
-    
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/accounts/login/')
+    else:
+        all_posts = Post.objects.all()
+        return render(request, 'posts/index.html', {"posts":all_posts})
+        
 
 def post(request, id):
     # valid_id = False
@@ -63,9 +66,12 @@ def post(request, id):
     # except:
     #     raise Http404()
     # return render(request, 'posts/post_tpl.html', {"post":post})
-    post = get_object_or_404(Post, id=id)
-    return render(request, 'posts/post_tpl.html', {"post":post})    
-    
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/accounts/login/')
+    else:
+        post = get_object_or_404(Post, id=id)
+        return render(request, 'posts/post_tpl.html', {"post":post})    
+        
     
 def google(request, id):
     # return HttpResponseRedirect("https://www.google.com")
