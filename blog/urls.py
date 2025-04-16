@@ -25,6 +25,7 @@ urlpatterns = [
     # path('home/', include('posts.urls')),
     # path('google/', views.google), # views.google handle redirect
     path("<int:id>/", views.google),
+    path('accounts/', include('accounts.urls')),
 ]
 admin.site.site_header = 'My Blog'
 admin.site.index_title = 'My Blog'
