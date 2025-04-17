@@ -105,14 +105,17 @@
                    </form>
 
                     {% if not user.is_authenticated %}
-                        <a href="{% url "login" %}" class="btn btn-dark m-2">Login</a>
+                        <a href="{% url "account-login" %}" class="btn btn-dark m-2">Login</a>
                         <a href="{% url "sign_up" %}" class="btn btn-dark m-3">Create Account</a>
                     {% endif %}
 
                     {% if user.is_authenticated %}
                         <h2 style='font-size:20px;margin:5px'>Welcome - {{user.get_full_name|capfirst|truncatechars:20}}</h2>
                         <!-- <h2 style='font-size:20px;margin:5px'>Welcome - {{user|capfirst|truncatechars:20}}</h2> -->
-                        <a class="btn btn-dark m-3" href="{% url "logout" %}" >Logout</a>
+                        <form action='{% url "account-logout" %}' method='POST'>
+                            {% csrf_token %}
+                            <input type="Submit" value="Logout" class='btn btn-dark'/>
+                        </form>
                     {% endif %}
              
                     <!-- <p class="h3 fw-bold m-2 ">Welcome - Username</p> -->

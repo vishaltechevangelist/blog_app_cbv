@@ -1,0 +1,12 @@
+
+    <h1>Built-In Login Page</h1>
+    <form action="" method='POST'>
+        {% csrf_token %}
+        {{form}}
+        <button type="submit">Login</button>
+    </form>
+
+<form action="{% url "logout" %}" method='POST'>
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
