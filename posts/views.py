@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 from posts.models import Post
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
+from blog.settings import POST_COUNT_ON_PAGE
 
 # Create your views here.
 
@@ -43,8 +45,12 @@ def home(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/accounts/login/')
     else:
-        all_posts = Post.objects.all()
-        return render(request, 'posts/index.html', {"posts":all_posts})
+        all_posts = Post.objects.all().order_by('-id') # latest post
+        paginator = Paginator(all_posts, POST_COUNT_ON_PAGE)
+        page_number = request.GET.get('p', 1)
+        page_obj = paginator.get_page(page_number)
+        # return render(request, 'posts/index.html', {"posts":all_posts})
+        return render(request, 'posts/index.html', {"posts":page_obj})
         
 
 def post(request, id):
