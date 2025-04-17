@@ -26,6 +26,7 @@ urlpatterns = [
     # path('google/', views.google), # views.google handle redirect
     path("<int:id>/", views.google),
     path('accounts/', include('accounts.urls')),
+    path('users/', include('django.contrib.auth.urls')),
 ]
 admin.site.site_header = 'My Blog'
 admin.site.index_title = 'My Blog'
