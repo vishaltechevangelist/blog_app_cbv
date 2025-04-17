@@ -125,6 +125,9 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# POST APP CONSTANT
+POST_COUNT_ON_PAGE = 5
+
 # BUILT-IN LOGIN REDIRECT
 LOGIN_REDIRECT_URL = '/post/home/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
