@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, Http404
 from django.urls import reverse
-from posts.models import Post
+from posts.models import Post, Tag
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from blog.settings import POST_COUNT_ON_PAGE
+from posts.forms import CommentForm
 
 # Create your views here.
 
@@ -72,11 +73,21 @@ def post(request, id):
     # except:
     #     raise Http404()
     # return render(request, 'posts/post_tpl.html', {"post":post})
+    post = get_object_or_404(Post, id=id)
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/accounts/login/')
     else:
-        post = get_object_or_404(Post, id=id)
-        return render(request, 'posts/post_tpl.html', {"post":post})    
+        if request.method == 'POST':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.post = post
+                comment.save()
+                return HttpResponseRedirect(reverse('post', args=[id]))
+        else:
+            form = CommentForm()
+            post = get_object_or_404(Post, id=id)
+            return render(request, 'posts/post_tpl.html', {"post":post, 'form':form})    
         
     
 def google(request, id):
@@ -84,3 +95,7 @@ def google(request, id):
     # return HttpResponseRedirect("/post/{}/".format(id))
     url = reverse("post", args=[id])
     return HttpResponseRedirect(url)
+
+def tags(request, id):
+    tag = Tag.objects.get(id=id)
+    return render(request, 'posts/tags.html', {'tags':tag.post_set.all()})
