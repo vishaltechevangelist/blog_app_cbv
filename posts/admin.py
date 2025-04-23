@@ -1,5 +1,5 @@
 from django.contrib import admin
-from posts.models import Post
+from posts.models import Post, Comment, Tag
 
 # Register your models here.
 
@@ -13,3 +13,12 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ['post_title'] # display search box, searches on post_title
 
 # admin.site.register(Post, PostAdmin) # Need to register PostAdmin (ModelAdmin) along with Post Model
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'comment', 'post_id']
+
+
+admin.site.register(Tag)
+# @admin.register(Tag)
+# class TagAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'name', 'post_id']

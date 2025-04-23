@@ -11,43 +11,44 @@
     
                 <h1 class="text-center fs-1 fw-bold my-3">{{post.post_title}}</h1>
                 <div class="d-flex justify-content-center align-items-center flex-wrap ">
-                    
-                        <a href="" class="btn btn-dark opacity-70 text-light m-2">#python</a>
-                   
-                  <a href="" class="btn btn-dark opacity-70 text-light m-2">#python</a>
-                    <a href="" class="btn btn-primary opacity-70 text-light m-2">#datastructures & algorithms</a>
-                    <a href="" class="btn btn-danger opacity-70 text-light m-2">#programming</a>
-                    <a href="" class="btn btn-success opacity-70 text-light m-2">#software developers</a>
-                    <a href="" class="btn btn-dark opacity-70 text-light m-2">#Travel</a>
-                    <a href="" class="btn btn-primary opacity-70 text-light m-2">#Food</a> 
+                    {% for tag in post.tags.all %}
+                        <a href="{% url "tag" tag.id %}" class="btn btn-dark opacity-70 text-light m-2">#{{tag}}</a>
+                    {% endfor %}
+                        
                 </div>
                 <hr class="border border-dark border-1 opacity-50">
                 <p>{{post.post_content}}</p>    
             </div>
             <h2>Comments</h2>
-            <form method='POST'>
-                <textarea name="" class="form-control" id=""></textarea>
-                <button type='submit' class='btn btn-primary'>Comment</button>
-            </form>
-            <h2 class='bg-danger'>Login To Comment</h2>
-          
+            {% if user.is_authenticated %}
+                <form method='POST'>
+                    {% csrf_token %}
+                    {{form}}
+                    <button type="Submit" class="btn btn-primary">Comment</button>
+                </form>
+            {% endif %}
+            {% if not user.is_authenticated %}
+                <h2 class='bg-danger'>Login To Comment</h2>
+            {% endif %}
             <div class="card m-2">
-              
-                <div class="card-body">
-                    <div class="row g-0">
-                        <div class="col">
-                            <img src="https://static.vecteezy.com/system/resources/previews/000/550/980/non_2x/user-icon-vector.jpg"
-                                class="w-25 img-thumbnail rounded-circle" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Username</h5>
-                                <p class="card-text">Comment from the user</p>
-                                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p> 
+                {% for comment in comments %}
+                    <div class="card-body">
+                        <div class="row g-0">
+                            <div class="col">
+                                <img src="https://static.vecteezy.com/system/resources/previews/000/550/980/non_2x/user-icon-vector.jpg"
+                                    class="w-25 img-thumbnail rounded-circle" alt="...">
+                            </div>
+                            <div class="col-md-8">
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{comment.user}}</h5>
+                                    <p class="card-text">{{comment.comment}}</p>
+                                    {% comment %} <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>  {% endcomment %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
             
         </div>

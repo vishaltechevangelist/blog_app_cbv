@@ -1,0 +1,28 @@
+{% extends "superbase.html" %}
+
+{% block body %}
+    <div class="row">
+        {% for post in tags %}
+        <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="image-container">
+                            <img src="" class="img-fluid rounded-start" alt="...">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">{{forloop.counter}} - {{post.post_title|capfirst}}</h5>
+                            <p class="card-text fw-normal">{{post.post_content|truncatewords:20}}</p>
+                            <p class="card-text fw-normal"><small class="text-body-secondary">{{post.published_date}}</small></p>
+                            <a href="{% url "post" post.id %}" class="btn btn-dark">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+        {% endfor %}
+    </div>
+    
+{% endblock  %}
