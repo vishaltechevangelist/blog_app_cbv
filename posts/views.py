@@ -82,12 +82,13 @@ def post(request, id):
             if form.is_valid():
                 comment = form.save(commit=False)
                 comment.post = post
+                comment.user = request.user
                 comment.save()
                 return HttpResponseRedirect(reverse('post', args=[id]))
         else:
             form = CommentForm()
             post = get_object_or_404(Post, id=id)
-            return render(request, 'posts/post_tpl.html', {"post":post, 'form':form})    
+            return render(request, 'posts/post_tpl.html', {"post":post, 'form':form, 'comments':post.comment_set.all()})    
         
     
 def google(request, id):

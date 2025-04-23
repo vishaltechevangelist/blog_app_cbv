@@ -20,32 +20,35 @@
                 <p>{{post.post_content}}</p>    
             </div>
             <h2>Comments</h2>
-            
-            <form method='POST'>
-                {% csrf_token %}
-                {{form}}
-                <button type="Submit" class="btn btn-primary">Comment</button>
-            </form>
+            {% if user.is_authenticated %}
+                <form method='POST'>
+                    {% csrf_token %}
+                    {{form}}
+                    <button type="Submit" class="btn btn-primary">Comment</button>
+                </form>
+            {% endif %}
             {% if not user.is_authenticated %}
                 <h2 class='bg-danger'>Login To Comment</h2>
             {% endif %}
             <div class="card m-2">
-              
-                <div class="card-body">
-                    <div class="row g-0">
-                        <div class="col">
-                            <img src="https://static.vecteezy.com/system/resources/previews/000/550/980/non_2x/user-icon-vector.jpg"
-                                class="w-25 img-thumbnail rounded-circle" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Username</h5>
-                                <p class="card-text">Comment from the user</p>
-                                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p> 
+                {% for comment in comments %}
+                    <div class="card-body">
+                        <div class="row g-0">
+                            <div class="col">
+                                <img src="https://static.vecteezy.com/system/resources/previews/000/550/980/non_2x/user-icon-vector.jpg"
+                                    class="w-25 img-thumbnail rounded-circle" alt="...">
+                            </div>
+                            <div class="col-md-8">
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{comment.user}}</h5>
+                                    <p class="card-text">{{comment.comment}}</p>
+                                    {% comment %} <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>  {% endcomment %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
             
         </div>

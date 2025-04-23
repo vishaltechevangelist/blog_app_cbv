@@ -6,7 +6,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         # fields = '__all__'
         exclude = [
-            'post'
+            'post', 'user'
         ]
         widgets = {
             'comment':forms.Textarea(attrs={'class':'form-control'})
