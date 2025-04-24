@@ -14,6 +14,7 @@ class Post(models.Model):
     # published_date = models.DateTimeField(auto_now=True)
     published_date = models.DateField(auto_now=True) # updating data type
     tags = models.ManyToManyField(Tag)
+    post_image = models.ImageField(upload_to='post', default='post/1.png')
 
     def __str__(self):
         return self.post_title
