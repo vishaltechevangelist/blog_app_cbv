@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from posts import views
+from django.conf.urls.static import static
+from blog.settings import MEDIA_ROOT, MEDIA_URL
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +30,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('users/', include('django.contrib.auth.urls')),
 ]
+
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
+
 admin.site.site_header = 'My Blog'
 admin.site.index_title = 'My Blog'
