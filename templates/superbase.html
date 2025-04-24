@@ -80,7 +80,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            <a class="nav-link active" aria-current="page" href="{% url "blog_home" %}">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Tags</a>
@@ -99,8 +99,8 @@
                             </ul>
                         </li>
                     </ul>
-                   <form class="d-flex m-1" >
-                        <input class='form-control me-1' type='text'  />
+                   <form class="d-flex m-1" method='GET' action='{% url "search" %}'>
+                        <input class='form-control me-1' type='text' name="query" />
                         <button class='btn btn-outline-dark'>Search</button>
                    </form>
 

@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from blog.settings import POST_COUNT_ON_PAGE
 from posts.forms import CommentForm
+from django.db.models import Q
 
 # Create your views here.
 
@@ -100,3 +101,12 @@ def google(request, id):
 def tags(request, id):
     tag = Tag.objects.get(id=id)
     return render(request, 'posts/tags.html', {'tags':tag.post_set.all()})
+
+def search(request):
+    query = request.GET.get('query', None)
+    posts = Post.objects.filter(Q(post_title__icontains=query) | 
+                                    Q(post_content__icontains=query)).order_by('-id')
+    paginator = Paginator(posts, POST_COUNT_ON_PAGE)
+    page_number = request.GET.get('p', 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'posts/search.html', {'posts':page_obj, 'query':query})
