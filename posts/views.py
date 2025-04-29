@@ -7,43 +7,10 @@ from django.core.paginator import Paginator
 from blog.settings import POST_COUNT_ON_PAGE
 from posts.forms import CommentForm
 from django.db.models import Q
+from django.views.generic import ListView, DetailView
 
-# Create your views here.
-
-# posts = [
-#     {
-#         "id": 1,
-#         "title": "Understanding Django ORM",
-#         "content": "Django ORM allows developers to interact with the database easily."
-#     },
-#     {
-#         "id": 2,
-#         "title": "Building REST APIs",
-#         "content": "Django REST framework is powerful for building web APIs quickly."
-#     },
-#     {
-#         "id": 3,
-#         "title": "Handling Authentication",
-#         "content": "Django provides built-in support for authentication and authorization."
-#     }
-# ]
-
-# def helloWorld(request):
-#     # return HttpResponse("<html><h1>Hello World!</h1></html>")
-#     html = ""
-#     for post in posts:
-#         html += "<html><div><h1>{} - {}</h1><p>{}</p></div></html>".format(post["id"],post["title"],post["content"])
-#     return HttpResponse(html)
 
 def home(request):
-   # return HttpResponse("<html><h1>Hello World!</h1></html>")
-    # html = ""
-    # for post in posts:
-    #     html += "<html><div><a href='/post/{}'/><h1>{} - {}</h1></a><p>{}</p></div></html>".format(post["id"], post["id"],post["title"],post["content"])
-    # # return HttpResponse(html) 
-    # name = "vishal saxena" # For testing & learning
-    # # return render(request, 'posts/home.html', {"posts":posts, "name":name})
-    # return render(request, 'posts/index.html', {"posts":posts})
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/accounts/login/')
     else:
@@ -54,26 +21,14 @@ def home(request):
         # return render(request, 'posts/index.html', {"posts":all_posts})
         return render(request, 'posts/index.html', {"posts":page_obj})
         
+class HomeView(ListView):
+    model = Post
+    template_name = 'posts/index.html'
+    ordering = '-id'
+    context_object_name = 'posts'
+
 
 def post(request, id):
-    # valid_id = False
-    # for post in posts:
-    #     if post['id'] == id:
-    #         html = "<html><div><h1>{} - {}</h1><p>{}</p></div></html>".format(post["id"],post["title"],post["content"])
-    #         valid_id = True
-    #         break
-    # if valid_id:
-    #     # return HttpResponse(html)
-    #     # return render(request, 'posts/post.html', {"post":post})
-    #     return render(request, 'posts/post_tpl.html', {"post":post})
-    # else:
-    #     # return HttpResponseNotFound("Post not available😉")
-    #     raise Http404()
-    # try:
-    #     post = Post.objects.get(id=id)
-    # except:
-    #     raise Http404()
-    # return render(request, 'posts/post_tpl.html', {"post":post})
     post = get_object_or_404(Post, id=id)
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/accounts/login/')
@@ -90,11 +45,30 @@ def post(request, id):
             form = CommentForm()
             post = get_object_or_404(Post, id=id)
             return render(request, 'posts/post_tpl.html', {"post":post, 'form':form, 'comments':post.comment_set.all()})    
-        
+
+class PostView(DetailView):
+    model = Post
+    template_name = 'posts/post_tpl.html'
+    context_object_name = 'post'
+    ordering = '-id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentForm()
+        context['comments'] = self.object.comment_set.all().order_by('-id')
+        return context
+    
+    def post(self, request, pk):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.user = request.user
+            comment.save()
+            return HttpResponseRedirect(reverse('post', kwargs={'pk': pk}))
     
 def google(request, id):
-    # return HttpResponseRedirect("https://www.google.com")
-    # return HttpResponseRedirect("/post/{}/".format(id))
     url = reverse("post", args=[id])
     return HttpResponseRedirect(url)
 
@@ -110,3 +84,14 @@ def search(request):
     page_number = request.GET.get('p', 1)
     page_obj = paginator.get_page(page_number)
     return render(request, 'posts/search.html', {'posts':page_obj, 'query':query})
+
+class SearchView(ListView):
+    model = Post
+    template_name = 'posts/search.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self, request):
+        query = request.GET.get('query', None)
+        posts = Post.objects.filter(Q(post_title__icontains=query) | 
+                                    Q(post_content__icontains=query)).order_by('-id')
+        return posts
